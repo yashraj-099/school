@@ -1,6 +1,10 @@
 from django.urls import path
 from . import views
 urlpatterns = [
+    path("", views.demo_entry, name="demo_entry"),
+    path("switch-role/<str:role_name>/", views.switch_role, name="switch_role"),
+
+
     path('', views.login_view, name='home'),
     path('generate-invoice/<int:student_id>/', views.generate_fee_invoice, name='generate_invoice'),
     path('generate-result/<int:student_id>/', views.generate_result_pdf, name='generate_result'),

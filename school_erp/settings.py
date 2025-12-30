@@ -68,6 +68,8 @@ DATABASES = {
         }
     }
 }
+# Demo Mode (for Test)
+DEMO_MODE = True
 AUTH_PASSWORD_VALIDATORS = []
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

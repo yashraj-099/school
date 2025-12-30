@@ -1,3 +1,9 @@
+from django.conf import settings
+from django.contrib.auth import login
+from django.contrib.auth import get_user_model
+from django.shortcuts import redirect, render
+
+
 from functools import wraps
 
 from django.contrib.auth import authenticate, login, logout
@@ -37,8 +43,49 @@ def role_required(*role_names):
             return redirect('select_dashboard')
         return _wrapped_view
     return decorator
+# Rolr switch
+def switch_role(request, role_name):
+    if not settings.DEMO_MODE:
+        return redirect("login")
+
+    User = get_user_model()
+
+    if role_name == "admin":
+        user = User.objects.filter(is_superuser=True).first()
+        redirect_url = "admin_dashboard"
+
+    elif role_name == "teacher":
+        user = User.objects.filter(role__name="Teacher").first()
+        redirect_url = "teacher_dashboard"
+
+    elif role_name == "student":
+        user = User.objects.filter(role__name="Student").first()
+        redirect_url = "student_dashboard"
+
+    else:
+        return redirect("login")
+
+    if user:
+        login(request, user)
+        return redirect(redirect_url)
+
+    return redirect("login")
+
+def demo_entry(request):
+    if settings.DEMO_MODE:
+        User = get_user_model()
+        admin = User.objects.filter(is_superuser=True).first()
+
+        if admin:
+            login(request, admin)
+            return redirect("admin_dashboard")
+
+    # fallback to normal login
+    return redirect("login")
 
 def login_view(request):
+    if settings.DEMO_MODE:
+        return redirect("/")   # goes to demo_entry → admin dashboard
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

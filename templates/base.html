@@ -48,6 +48,25 @@
   <body>
         <div class="container-fluid mt-4">
           {% block content %}
+          {% if settings.DEMO_MODE %}
+<div class="btn-group ms-3">
+    <a href="{% url 'switch_role' 'admin' %}"
+       class="btn btn-sm btn-outline-danger">
+        Admin
+    </a>
+
+    <a href="{% url 'switch_role' 'teacher' %}"
+       class="btn btn-sm btn-outline-primary">
+        Teacher
+    </a>
+
+    <a href="{% url 'switch_role' 'student' %}"
+       class="btn btn-sm btn-outline-success">
+        Student
+    </a>
+</div>
+{% endif %}
+
           {% endblock %}
         </div>
       </div>
